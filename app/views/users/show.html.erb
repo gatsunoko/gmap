@@ -32,27 +32,11 @@
   <div id="map" style='width :800px; height: 400px;'></div>
 </div>
 
-<script type="text/javascript">
-  handler = Gmaps.build('Google');
-  handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
-    markers = handler.addMarkers(<%= raw @hash.to_json %>, {draggable: false});
-    //handler.fitMapToBounds();
-    handler.getMap().setZoom(15);
-    handler.getMap().setCenter(new google.maps.LatLng(<%= @user.latitude %>, <%= @user.longitude %>));
-    //add markers to original json
-    _.each(markers, function(json, index){
-      json.marker = markers[index];
-    });
-
-    //add dragend event to markers, triggered when you drop them
-    _.each(markers, function(json){
-      google.maps.event.addListener(json.marker.getServiceObject(), "dragend", function(event) {
-        var lat = event.latLng.lat();
-        var lng = event.latLng.lng();
-        console.log('Marker with id: ' + json.id + ' dropped hat lat: ' + lat + ' and lng: ' + lng)
-        document.getElementById("user_latitude").value = event.latLng.lat();
-        document.getElementById("user_longitude").value = event.latLng.lng();
-      });
-    });
-  });
+<script>
+var user = <%= raw @user.to_json %>
+var markers = <%= raw @hash.to_json %>
+var options = {
+  draggable: false
+}
+gmap(markers, user, options)
 </script>
