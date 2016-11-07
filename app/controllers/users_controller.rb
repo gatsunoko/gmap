@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
+
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_marker, only: [:show, :edit]
 
   # GET /users
   # GET /users.json
@@ -10,17 +12,6 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @hash = Gmaps4rails.build_markers(@user) do |user, marker|
-      marker.lat user.latitude
-      marker.lng user.longitude
-      marker.infowindow user.description
-      marker.json({title: user.title})
-      marker.picture({
-        url: "/puyo.png",
-        width: "25",
-        height: "25"
-      })
-    end
   end
 
   # GET /users/new
@@ -30,12 +21,6 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @hash = Gmaps4rails.build_markers(@user) do |user, marker|
-      marker.lat user.latitude
-      marker.lng user.longitude
-      marker.infowindow user.description
-      marker.json({title: user.title})
-    end
   end
 
   # POST /users
@@ -87,5 +72,19 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(:title, :description, :address, :latitude, :longitude)
+    end
+
+    def set_marker
+      @hash = Gmaps4rails.build_markers(@user) do |user, marker|
+        marker.lat user.latitude
+        marker.lng user.longitude
+        marker.infowindow user.description
+        marker.json({title: user.title})
+        marker.picture({
+          url: ActionController::Base.helpers.asset_path("puyo.png"),
+          width: "25",
+          height: "25"
+        })
+      end
     end
 end
