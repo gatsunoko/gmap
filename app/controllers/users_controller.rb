@@ -10,6 +10,17 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @hash = Gmaps4rails.build_markers(@user) do |user, marker|
+      marker.lat user.latitude
+      marker.lng user.longitude
+      marker.infowindow user.description
+      marker.json({title: user.title})
+      marker.picture({
+        url: "/puyo.png",
+        width: "25",
+        height: "25"
+      })
+    end
   end
 
   # GET /users/new
